@@ -32,8 +32,6 @@ class App(customtkinter.CTk):
         self.title("DN Image Editor")
         self.geometry("1250x1000+0+0")# Set the width,height of the window, and x and y coordinates
         self.iconbitmap("assets/DN.ico")# Set DN image editor icon
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
         customtkinter.set_appearance_mode("dark")#sets the window/App in dark mode
 
         self.input_image_path = "assets\oslo2021.png"  # global input_image_path
@@ -48,10 +46,11 @@ class App(customtkinter.CTk):
         self.amplitudes=[5,5,5,5,5,5,5,5]
 
         #Default filter that will show on bottom frame at program initialization:
-        self.default_filter="Color Mapping"# options: "Filter 1","Color Mapping"
+        self.default_filter="Color Mapping"# options: "Color Mapping","Pixelate Triangles"
         #------------------------------------------------------------------------
         #Frames configuration
         #------------------------------------------------------------------------
+        self.grid_columnconfigure(0, weight=1) # configure to expand columns horizontally
         self.grid_rowconfigure(0, weight=0)  # Set weight for the first row (First frame: Images frame)
         self.grid_rowconfigure(1, weight=0)  # Set weight for the second row (Second frame: Menu frame)
         self.grid_rowconfigure(2, weight=1)  # Set weight for the third row (Third frame: Bottom frame)
@@ -94,7 +93,7 @@ class App(customtkinter.CTk):
         self.button_run = customtkinter.CTkButton(self.menu_frame, text="Run Filter", command=lambda:self.run_filter(self.default_filter))
         self.button_run.grid(row=0, column=1, padx=10, pady=10, sticky="W")
 
-        self.button_selectFilter = customtkinter.CTkOptionMenu(self.menu_frame, values=["Color Mapping","Filter 1"], command=self.selectFilter_callback)
+        self.button_selectFilter = customtkinter.CTkOptionMenu(self.menu_frame, values=["Color Mapping","Pixelate Triangles"], command=self.selectFilter_callback)
         self.button_selectFilter.grid(row=0, column=2, padx=10, pady=10, sticky="W")
 
         self.button_saveIMG = customtkinter.CTkButton(self.menu_frame, text="Save Output", command=self.saveIMG)
@@ -153,23 +152,26 @@ class App(customtkinter.CTk):
             cv2.imwrite(fileName, self.new_output_image)
 
     def resizeIMG(self, path):
-
+        """
+        :param path: input image path or PIL image
+        :return: img - a PIL image resized where max width = 600, max height = 600
+        """
         try:
             img = Image.open(path)  # try to read image as filename (this is valid when user imports an image)
         except:
             img = path  # in case it's not possible, it means we are passing a PIL image (the processed image)
         # using pillow to resize IMG:
         baseW = 600  # max allowed Width
-        baseH = 650  # max allowed Height
+        baseH = 600  # max allowed Height
         imgWidth = img.size[0]
         imgHeight = img.size[1]
-        if imgWidth > baseW:  # we resize the image in case its width exceeds 650 pixels
+        if imgWidth > baseW:  # we resize the image in case its width exceeds 600 pixels
             wpercent = (float(baseW / imgWidth))
             hsize = int((float(imgHeight) * float(wpercent)))
             img = img.resize((baseW, hsize), Image.ANTIALIAS)
         imgWidth = img.size[0]
         imgHeight = img.size[1]
-        if imgHeight > baseH:  # we resize the image in case its height exceeds 650 pixels
+        if imgHeight > baseH:  # we resize the image in case its height exceeds 600 pixels
             hpercent = (float(baseH / imgHeight))
             wsize = int((float(imgWidth) * float(hpercent)))
             img = img.resize((wsize, baseH), Image.ANTIALIAS)
@@ -181,8 +183,8 @@ class App(customtkinter.CTk):
     def run_filter(self, filter_ID):
         print("input_image_path: ", self.input_image_path)
 
-        if filter_ID=="Filter 1":
-            print("Running Filter 1")
+        if filter_ID=="Pixelate Triangles":
+            print("Running Pixelate Triangles")
             size = int(self.slider.get())  # get value of size from slider
             flipX = int(self.switch_flipX.get())  # get value of size from slider
             flipY = int(self.switch_flipY.get())  # get value of size from slider
@@ -386,25 +388,31 @@ class App(customtkinter.CTk):
 
     def selectFilter_callback(self, choice):
         print("Selected Filter:", choice)
-        if choice=="Filter 1":
+        if choice=="Pixelate Triangles":
+            #Set min and max sizes allowed for pixelation:
+            currentImage=Image.open(self.input_image_path)#read full size input image
+            inputWidth=currentImage.size[0]
+            inputHeight=currentImage.size[1]
+            min_size=int(min(inputWidth,inputHeight)*0.01)#set min size for triangle filter as 1% of image's lowest dimention
+            max_size=int(max(inputWidth,inputHeight)*0.10)#set max size for triangle filter as 10% of image's highest dimention
             # ------------------------------------------------------------------------
             # Bottom frame
             # ------------------------------------------------------------------------
-            self.button_run.configure(command=lambda: self.run_filter("Filter 1"))
+            self.button_run.configure(command=lambda: self.run_filter("Pixelate Triangles"))
 
             self.clear_frame(self.bottom_frame)#ensure the bottom_frame is clean before adding widgets, buttons, etc
 
-            self.slider_text = customtkinter.CTkLabel(self.bottom_frame, text="Step size:")
-            self.slider_text.grid(row=0, column=1, padx=5, pady=10, sticky="w")
+            self.slider_text = customtkinter.CTkLabel(self.bottom_frame, text="Size")
+            self.slider_text.grid(row=0, column=1, padx=0, pady=10, sticky="w")
 
-            self.slider = customtkinter.CTkSlider(self.bottom_frame, from_=3, to=100, number_of_steps=97)
-            self.slider.grid(row=0, column=2, padx=5, pady=10, sticky="w")
+            self.slider = customtkinter.CTkSlider(self.bottom_frame, from_=min_size, to=max_size, number_of_steps=99)
+            self.slider.grid(row=0, column=0, padx=0, pady=10, sticky="w")
 
             self.switch_flipX = customtkinter.CTkSwitch(self.bottom_frame, text="Flip X", onvalue=True, offvalue=False)
-            self.switch_flipX.grid(row=1, column=1, padx=5, pady=10, sticky="w")
+            self.switch_flipX.grid(row=1, column=0, padx=0, pady=10, sticky="w")
 
             self.switch_flipY = customtkinter.CTkSwitch(self.bottom_frame, text="Flip Y", onvalue=True, offvalue=False)
-            self.switch_flipY.grid(row=2, column=1, padx=5, pady=10, sticky="w")
+            self.switch_flipY.grid(row=2, column=0, padx=0, pady=10, sticky="w")
 
 
         elif choice == "Color Mapping":
