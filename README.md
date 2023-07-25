@@ -9,14 +9,14 @@ A Python-based image editor made by [David Norman Díaz Estrada](https://www.lin
 The Color Mapping filter allows to apply any 8-color palette to an input image.
 The current version has the following features:
 <ul>
-  <li>Edit and save any custom palette.</li>
-  <li>Palette generation using linear gradient between any 2 colors.</li>
-  <li>Palette extraction from any image by using k-means algorithm (tones from image).</li>
+  <li>Edit and save any custom palette to the palette database.</li>
+  <li>Palette generation based on a linear gradient between any two colors.</li>
+  <li>Palette extraction from any image using the k-means algorithm (tones from image).</li>
   <li>Color mapping modes: Fuzzy, Euclidean, and Light-based.</li>
-  <li>The Fuzzy mode allows to adjust the "weight" of each color during mapping, which the user can adjust with the sliders.</li>
+  <li>The Fuzzy mode allows the user to adjust the "weight" of each color during mapping by moving the sliders.</li>
 </ul>
 
-Here is an example of color Mapping using an image I took in Oslo:
+Here is an example of color Mapping using a photo I took in Oslo:
 <img src="readmeFiles/DN_app_01.png" >
 
 These are some other examples with diverse palettes:
@@ -26,7 +26,7 @@ These are some other examples with diverse palettes:
 ------------------
 **Installation:**<br/>
 ------------------
-DN image editor requires the following dependencies: OpenCV, Scikit-learn, NumPy, Matplotlib, Tkinter, CustomTkinter, and Pillow.
+DN Image Editor requires the following dependencies: OpenCV, Scikit-learn, NumPy, Matplotlib, Tkinter, CustomTkinter, and Pillow.
 
 First, clone this repo, you can do:
 ```
