@@ -9,8 +9,8 @@ A Python-based image editor made by [David Norman Díaz Estrada](https://www.lin
 The Color Mapping filter allows to apply any 8-color palette to an input image.
 The current version has the following features:
 <ul>
-  <li>Edit and save any custom palette to the palette database.</li>
-  <li>Palette generation based on a linear gradient between any two colors.</li>
+  <li>Edit and save any custom palette to the database.</li>
+  <li>Palette generation based on a linear gradient between two colors.</li>
   <li>Palette extraction from any image using the k-means algorithm (tones from image).</li>
   <li>Color mapping modes: Fuzzy, Euclidean, and Light-based.</li>
   <li>The Fuzzy mode allows the user to adjust the "weight" of each color during mapping by moving the sliders.</li>
@@ -22,6 +22,20 @@ Here is an example of color Mapping using a photo I took in Oslo:
 These are some other examples with diverse palettes:
 <img src="readmeFiles/examples_paletteMapping.png" >
 
+------------------
+**Pixelate Triangles:**<br/>
+------------------
+This filter pixelates an image with triangle shapes:
+<ul>
+  <li>The size slider controls the triangle dimensions.</li>
+  <li>The Flip X option alternates the pattern by columns.</li>
+  <li>The Flip Y option alternates the pattern by rows.</li>
+</ul>
+
+<img src="readmeFiles/triangleFilter.png" >
+
+Here are some examples of different pixelation levels:
+<img src="readmeFiles/triangleFilterExamples.png" >
 
 ------------------
 **Installation:**<br/>
