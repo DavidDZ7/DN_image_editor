@@ -28,3 +28,19 @@ These are some other examples with diverse palettes:
 ------------------
 DN image editor requires the following dependencies: OpenCV, Scikit-learn, NumPy, Matplotlib, Tkinter, CustomTkinter, and Pillow.
 
+First, clone this repo, you can do:
+```
+git clone https://github.com/DavidDZ7/DN_image_editor.git
+```
+Then, go to Anaconda prompt and navigate to the folder repo and proceed as follows:
+```
+conda create --name DNimageEditor python=3.7.7
+conda activate DNimageEditor
+pip install -r requirements.txt
+```
+Your environment is now ready, you can launch DN Image Editor by running:
+```
+python GUI_DN_Image_Editor.py
+```
+
+
