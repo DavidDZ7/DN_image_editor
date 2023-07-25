@@ -1,0 +1,14 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: win-64
+
+tk==0.1.0
+customtkinter==5.2.0
+opencv-python==4.2.0.34
+scikit-learn==1.0.2
+matplotlib==3.5.3
+numpy==1.18.1
+pillow==9.5.0
+
+
+
