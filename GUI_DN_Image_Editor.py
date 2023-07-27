@@ -330,6 +330,7 @@ class App(customtkinter.CTk):
         paletteName = dialog.get_input()  # waits for input
 
         if paletteName != None:
+            self.data = self.readPalettes()  # always read palette database first, avoid bug of overwriting previosly saved values
             #global data  # data is the current dictionary for palettes
             # modify the dictionary:
             self.data["names"].append(paletteName)
