@@ -14,13 +14,14 @@ import cv2
 import customtkinter
 import tkinter
 from customtkinter import filedialog
-from tkinter import colorchooser,simpledialog
-from PIL import ImageTk, Image #we use PIL to open jpg,png images.
+from tkinter import colorchooser
+from PIL import Image #we use PIL to open jpg,png images.
 #custom libraries:
 import source.filter_triangle as filter_triangle
 import source.colorMapping as colorMapping
 import source.LinearGradient as LinearGradient
 import source.Kmeans_tones as Kmeans_tones
+import source.customTopLevelWindows as customTopLevelWindows
 
 class App(customtkinter.CTk):
     def __init__(self, *args, **kwargs):
@@ -33,6 +34,7 @@ class App(customtkinter.CTk):
         self.geometry("1250x1000+0+0")# Set the width,height of the window, and x and y coordinates
         self.iconbitmap("assets/DN.ico")# Set DN image editor icon
         customtkinter.set_appearance_mode("dark")#sets the window/App in dark mode
+        self.toplevel_window = None #initialize as None
 
         self.input_image_path = "assets\oslo2021.png"  # global input_image_path
         self.new_output_image=None# global output image, this one is not resized, which does occur with the output displayed
@@ -323,8 +325,10 @@ class App(customtkinter.CTk):
         self.setPalette(self.button_selectPalette.get(),mode="From json")
 
     def button_savePalette_callback(self):
-        # prompt a modal window to ask user the name of new palette:
-        paletteName = simpledialog.askstring("Save Current Palette", "Enter name for new palette:", parent=self)
+        # Display a TopLevel window to ask user the name of new palette:
+        dialog = customTopLevelWindows.askPalette()
+        paletteName = dialog.get_input()  # waits for input
+
         if paletteName != None:
             #global data  # data is the current dictionary for palettes
             # modify the dictionary:
@@ -562,6 +566,13 @@ class App(customtkinter.CTk):
             self.radiobutton_3 = customtkinter.CTkRadioButton(self.colorMapping_frame, text="Light", variable=self.colorMappingType_var, value="light")
             self.radiobutton_3.grid(row=3, column=0, padx=1, pady=2, sticky="W")
 
+
+    def open_toplevel(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = customTopLevelWindows.askPalette(self)  # create window if it's None or destroyed
+
+        else:
+            self.toplevel_window.focus()  # if window exists focus it
 
 
 app = App()
