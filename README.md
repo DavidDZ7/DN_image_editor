@@ -1,6 +1,16 @@
-# DN_image_editor
-A Python-based image editor made by [David Norman Díaz Estrada](https://www.linkedin.com/in/dnde7/)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/DN_LogoDark.png">
+    <img src="./assets/DN_LogoLight.png">
+  </picture>
+</p>
 
+---
+
+<div align="center">
+A Python-based image editor made by David Norman Díaz Estrada<br>
+  https://www.linkedin.com/in/dnde7/
+</div>
 
 
 ------------------
