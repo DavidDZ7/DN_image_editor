@@ -225,13 +225,14 @@ class App(customtkinter.CTk):
             widget.destroy()
 
     def setColor(self, ID):
-        color = colorchooser.askcolor()
+        colorChooser = customTopLevelWindows.colorChooser()#create colorChooser top level window
+        color=colorChooser.get_color()
         print(color)
         # print(color[0]) print RGB value
         # print(color[1]) print hexa value
         #global Rtones, Gtones, Btones
 
-        if color[1] != None:
+        if color != None:
             if ID == 0: self.color_button1.configure(fg_color=color[1])
             if ID == 1: self.color_button2.configure(fg_color=color[1])
             if ID == 2: self.color_button3.configure(fg_color=color[1])
@@ -240,8 +241,6 @@ class App(customtkinter.CTk):
             if ID == 5: self.color_button6.configure(fg_color=color[1])
             if ID == 6: self.color_button7.configure(fg_color=color[1])
             if ID == 7: self.color_button8.configure(fg_color=color[1])
-            #if ID == 8: self.color_button9.configure(fg_color=color[1])# linearGradient color1
-            #if ID == 9: self.color_button9.configure(fg_color=color[1])# linearGradient color2
 
             self.Rtones[ID] = int(color[0][0])#update global variable value for R channel of tones
             self.Gtones[ID] = int(color[0][1])#update global variable value for G channel of tones
@@ -254,12 +253,13 @@ class App(customtkinter.CTk):
     def linearGradient(self,RUN, ID):
 
         if RUN == False:
-            color = colorchooser.askcolor()
+            colorChooser = customTopLevelWindows.colorChooser()  # create colorChooser top level window
+            color = colorChooser.get_color()
             print(color)
             # print(color[0]) print RGB value
             # print(color[1]) print hexa value
 
-            if color[1] != None:
+            if color != None:
                 if ID == 1:
                     self.linearGradient_color1_button.configure(fg_color=color[1])  # assign color in hexadecimal
                     self.linearGradient_color1 = [int(color[0][0]), int(color[0][1]), int(color[0][2])]  # assign RBG values
@@ -567,13 +567,6 @@ class App(customtkinter.CTk):
             self.radiobutton_3 = customtkinter.CTkRadioButton(self.colorMapping_frame, text="Light", variable=self.colorMappingType_var, value="light")
             self.radiobutton_3.grid(row=3, column=0, padx=1, pady=2, sticky="W")
 
-
-    def open_toplevel(self):
-        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = customTopLevelWindows.askPalette(self)  # create window if it's None or destroyed
-
-        else:
-            self.toplevel_window.focus()  # if window exists focus it
 
 
 app = App()
