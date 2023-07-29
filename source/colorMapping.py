@@ -2,19 +2,20 @@
 Script to perform different types of color mapping
 David Norman Diaz Estrada - 2023
 """
+from time import perf_counter
+#external libraries:
 import cv2
 import numpy as np
-from time import perf_counter
-#import colorsys
+#custom libraries:
 import source.fuzzyfier as fuzzyfier
 
 
 def colorMap(pxR,pxG,pxB, Rtones, Gtones, Btones):
-    #recuperamos componentes RGB del pixel original:
+    #Get RGB components of original pixel:
     b=pxB
     g=pxG
     r=pxR
-    #medimos distancias entre pixel original y cada tono de la lista
+    #Measure Distances between original pixel and each tone in palette:
     distances=[]
     for i in range (0,len(Rtones)):
         R = Rtones[i]
@@ -23,53 +24,53 @@ def colorMap(pxR,pxG,pxB, Rtones, Gtones, Btones):
         dist=((R-r)**2+(G-g)**2+(B-b)**2)**0.5 #euclidean distance
         #dist=abs(R - r) + abs(G - g) + abs(B - b) # "pseudo euclidean distance"
         distances.append(dist)
-    dist_min=min(distances)#identificamos distancia minima
+    dist_min=min(distances)#get minimum distance
     index=0
-    #identificamos en que posición estaba la distancia mínima:
+    #Identify index of min distance:
     for element in  distances:
         if dist_min==element: break
         index+=1
-    #recuperamos componentes RGB del tono a asignar
+    #Retrieve RGB components of new assigned color:
     newR = Rtones[index]
     newG = Gtones[index]
     newB = Btones[index]
-    #return value of selected tone:
+    #Return value of selected tone:
     return [newR,newG,newB]
 
 def fuzzyColorMap(pxR,pxG,pxB, tones, membershipValues):
     R_mv, G_mv, B_mv = membershipValues[0], membershipValues[1],membershipValues[2]
     Rtones, Gtones, Btones = tones[0], tones[1],tones[2]
-    #recuperamos componentes RGB del pixel original:
+    #Get RGB components of original pixel:
     b=pxB
     g=pxG
     r=pxR
 
-    #medimos similitud entre pixel original y cada tono de la lista
+    #Measure similitude between original pixel and each tone in palette:
     similitudes=[]
     for i in range (0,len(Rtones)):
         sim = R_mv[i][r]*G_mv[i][g]*B_mv[i][b] #fuzzy similitude of original pixel with current tone
         similitudes.append(sim)
-    similitud_max=max(similitudes)#identificamos similitud máxima
+    similitud_max=max(similitudes)#get maximum similitude
 
     index=0
-    #identificamos en que posición estaba la similitud máxima:
+    #Identify index of maximum similitude:
     for element in  similitudes:
         if similitud_max==element: break
         index+=1
-    #recuperamos componentes RGB del tono a asignar
+    #Retrieve RGB components of new assigned color:
     newR = Rtones[index]
     newG = Gtones[index]
     newB = Btones[index]
-    #return value of selected tone:
+    #Return value of selected tone:
     return [newR,newG,newB]
 
 def lightcolorMap(pxR,pxG,pxB, Rtones, Gtones, Btones):
-    #retrieve RGB components of original pixel:
+    #Retrieve RGB components of original pixel:
     b=pxB
     g=pxG
     r=pxR
 
-    #compute lightness level of pixel:
+    #Compute lightness level of pixel:
     light=int((b+g+r)/3)
     index=0
     if light in range(  0,  32): index = 0
@@ -91,14 +92,13 @@ def lightcolorMap(pxR,pxG,pxB, Rtones, Gtones, Btones):
     newG = int(Gtones[index]*(light/((index+1)*32-1)))
     newB = int(Btones[index]*(light/((index+1)*32-1)))
 
-    #return value of selected tone:
+    #Return value of selected tone:
     return [newR,newG,newB]
 
 def main(fileName,Rtones,Gtones,Btones,amplitudes,colorMode,mappingMode,visualize):
 
     t1_start = perf_counter()  # store start time, to measure execution time
     print(fileName)
-    #fileName='Lena.jpg'
 
     #img = cv2.imread(fileName,cv2.IMREAD_COLOR)
     # openCV imread method doesn't support paths or filenames with unicode characters
@@ -146,14 +146,6 @@ def main(fileName,Rtones,Gtones,Btones,amplitudes,colorMode,mappingMode,visualiz
 
     t2_stop = perf_counter()  # stop measuring time
     print("Time elapsed: ", t2_stop - t1_start)  # CPU seconds elapsed (floating point)
-
-    #newFile = fileName+'_colorMap.png'
-    #cv2.imwrite(newFile,img)
-
-    #show processed Image:
-    #cv2.imshow('image',img)
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
 
 
     return img
