@@ -1,8 +1,8 @@
 """
 Python GUI for DN Image Editor
 
-Filter 1: pixelate with triangles
-Filter 2: Color mapping
+Filter 1: Color mapping
+Filter 2: pixelate with triangles
 
 David Norman Diaz Estrada - 2023
 """
@@ -14,8 +14,7 @@ import cv2
 import customtkinter
 import tkinter
 from customtkinter import filedialog
-from tkinter import colorchooser
-from PIL import Image #we use PIL to open jpg,png images.
+from PIL import Image #we use PIL to open jpg,png images and display them on GUI.
 #custom libraries:
 import source.filter_triangle as filter_triangle
 import source.colorMapping as colorMapping
@@ -49,6 +48,7 @@ class App(customtkinter.CTk):
 
         #Default filter that will show on bottom frame at program initialization:
         self.default_filter="Color Mapping"# options: "Color Mapping","Pixelate Triangles"
+
         #------------------------------------------------------------------------
         #Frames configuration
         #------------------------------------------------------------------------
@@ -68,7 +68,6 @@ class App(customtkinter.CTk):
         self.images_frame.grid(row=0, column=0, padx=10, pady=10, sticky="NEW")
         self.images_frame.pack_propagate(False)#prevent from expanding
         self.images_frame.configure(height=600)# Configure the row to have a constant height
-
 
         img1 = self.resizeIMG(self.input_image_path)  # call resize function to display default image resized
         self.input_img = customtkinter.CTkImage(dark_image=img1, size=(img1.size[0], img1.size[1]))
@@ -122,6 +121,9 @@ class App(customtkinter.CTk):
         self.author_label.bind("<Button-1>", lambda event: open_link())# Configure the label to act as a hyperlink
 
     def load_image(self):
+        """
+        Function to load an input image and display it on GUI
+        """
         # Define the file types
         filetypes = (("PNG Files", "*.png"), ("JPEG Files", "*.jpg;*.jpeg"))
         answer = filedialog.askopenfilename(parent=self, title="Select File", filetypes=filetypes)
@@ -137,6 +139,10 @@ class App(customtkinter.CTk):
             self.new_output_image = None #erase previous output image
 
     def saveIMG(self):
+        """
+        Function to open a filedialog window and save output image
+        :return:
+        """
         # ask user for filename for new image:
         filetypes = (("PNG Files", "*.png"), ("JPEG Files", "*.jpg;*.jpeg"))
         path = filedialog.asksaveasfilename(filetypes=filetypes)
@@ -179,11 +185,14 @@ class App(customtkinter.CTk):
             img = img.resize((wsize, baseH), Image.ANTIALIAS)
         # note that there will be cases in which we will have to resize by width and then by height
 
-        # img = ImageTk.PhotoImage(img)
         return img
 
     def run_filter(self, filter_ID):
-        print("input_image_path: ", self.input_image_path)
+        """
+        Function to run selected filter
+        :param filter_ID: name of selected filter
+        """
+        print("input_image_path: ", self.input_image_path)#read the full size input image
 
         if filter_ID=="Pixelate Triangles":
             print("Running Pixelate Triangles")
@@ -198,7 +207,7 @@ class App(customtkinter.CTk):
                                   cv2.COLOR_BGR2RGB)  # convert from BGR to RGB in order to correctly create a PIL image
             im_pil = Image.fromarray(im_pil)  # create PIL image from array
             # Show processed Image on GUI
-            img2 = self.resizeIMG(im_pil)  # we resize IMG in case it's one of its dimentions exceeds 650 pixels
+            img2 = self.resizeIMG(im_pil)  # we resize IMG in case it's one of its dimensions exceeds 650 pixels
 
             output_img = customtkinter.CTkImage(dark_image=img2, size=(img2.size[0], img2.size[1]))
             self.output_img_label.configure(image=output_img)
@@ -216,15 +225,24 @@ class App(customtkinter.CTk):
                                   cv2.COLOR_BGR2RGB)  # convert from BGR to RGB in order to correctly create a PIL image
             im_pil = Image.fromarray(im_pil)  # create PIL image from array
             # Show processed Image on GUI
-            img2 = self.resizeIMG(im_pil)  # we resize IMG in case it's one of its dimentions exceeds 650 pixels
+            img2 = self.resizeIMG(im_pil)  # we resize IMG in case it's one of its dimensions exceeds 600 pixels
             output_img = customtkinter.CTkImage(dark_image=img2, size=(img2.size[0], img2.size[1]))
             self.output_img_label.configure(image=output_img)
 
     def clear_frame(self, frame):
+        """
+        Function to clear widgets in frame, used when changing between filters
+        :param frame: the name of the frame that needs to be cleared
+        """
         for widget in frame.winfo_children():
             widget.destroy()
 
     def setColor(self, ID):
+        """
+        Function to set/change a color from the palette
+        Displays a top level window with a color chooser
+        :param ID: 0 to 7 (colors 1 to 8)
+        """
         colorChooser = customTopLevelWindows.colorChooser()#create colorChooser top level window
         color=colorChooser.get_color()
         print(color)
@@ -251,8 +269,12 @@ class App(customtkinter.CTk):
         print("Btones = " + str(self.Btones))
 
     def linearGradient(self,RUN, ID):
-
-        if RUN == False:
+        """
+        Function to set colors and compute linear gradient
+        :param RUN: If True it computes linear gradient, if False it just sets a color for the gradient
+        :param ID: 1 (color 1) or 2 (color 2)
+        """
+        if RUN == False:#Just open color chooser to set one of the colors of the gradient
             colorChooser = customTopLevelWindows.colorChooser()  # create colorChooser top level window
             color = colorChooser.get_color()
             print(color)
@@ -262,12 +284,12 @@ class App(customtkinter.CTk):
             if color != None:
                 if ID == 1:
                     self.linearGradient_color1_button.configure(fg_color=color[1])  # assign color in hexadecimal
-                    self.linearGradient_color1 = [int(color[0][0]), int(color[0][1]), int(color[0][2])]  # assign RBG values
+                    self.linearGradient_color1 = [int(color[0][0]), int(color[0][1]), int(color[0][2])]  # assign RGB values
                 if ID == 2:
                     self.linearGradient_color2_button.configure(fg_color=color[1])  # assign color in hexadecimal
-                    self.linearGradient_color2 = [int(color[0][0]), int(color[0][1]), int(color[0][2])]  # assign RBG values
+                    self.linearGradient_color2 = [int(color[0][0]), int(color[0][1]), int(color[0][2])]  # assign RGB values
 
-        if RUN == True:
+        if RUN == True:#compute linear gradient and set palette in GUI
                 R, G, B = LinearGradient.getGradient(self.linearGradient_color1, self.linearGradient_color2)
                 print(R, G, B)
 
@@ -278,6 +300,10 @@ class App(customtkinter.CTk):
                 #LinearGradient.plotGradient(R, G, B)# to visualize the linear gradient in 3D
 
     def readPalettes(self):
+        """
+        Function to read palettes database (JSON)
+        :return: a json dictionary of palettes database
+        """
         # Ensure to read palettes from the directory of the main script being run
         directory = os.path.dirname(os.path.abspath(__file__))
         # Change the current directory to directory of the main script being run
@@ -292,6 +318,9 @@ class App(customtkinter.CTk):
         return '#%02x%02x%02x' % (int(rgb[0]), int(rgb[1]), int(rgb[2]))
 
     def setPalette(self, palette,mode):
+        """
+        Function to set a palette either from the database (JSON), Linear Gradient, or k-means result
+        """
         if mode=="From json":
             data = self.readPalettes()  # call function to read json file with palettes
 
@@ -321,12 +350,18 @@ class App(customtkinter.CTk):
         print("Btones = " + str(self.Btones))
 
     def button_selectPalette_callback(self, *args):
+        """
+        Function to set a palette from the database (json) when user selects it from list
+        """
         print("args:",args)
         self.setPalette(self.button_selectPalette.get(),mode="From json")
 
     def button_savePalette_callback(self):
-        # Display a TopLevel window to ask user the name of new palette:
-        dialog = customTopLevelWindows.askPalette()
+        """
+        Function to save a new palette to the database
+        Displays a TopLevel window to ask user the name of new palette
+        """
+        dialog = customTopLevelWindows.askPalette() # Display a TopLevel window to ask user the name of new palette
         paletteName = dialog.get_input()  # waits for input
 
         if paletteName != None:
@@ -347,12 +382,17 @@ class App(customtkinter.CTk):
             print("New palette saved: ",paletteName)
 
             # Update palettes in GUI:
-            # After adding the new pallete to dictionary, we update the option list in GUI
+            # After adding the new palette to dictionary, we update the option list in GUI
             NewOptionList = self.data["names"]
             self.button_selectPalette.configure(values=NewOptionList)
             self.button_selectPalette.set(paletteName)#show new paletteName on menu
 
     def getAmplitudes(self):
+        """
+        Function to get amplitudes for fuzzy color mapping
+        Gets values from sliders and divides them by 10 to convert amplitudes to range [1,10]
+        :return: list of amplitudes
+        """
         a1 = self.slider_c1.get()/10
         a2 = self.slider_c2.get()/10
         a3 = self.slider_c3.get()/10
@@ -366,6 +406,10 @@ class App(customtkinter.CTk):
         return self.amplitudes
 
     def setAmplitudes(self, *args):
+        """
+        Function to set amplitudes for fuzzy color mapping
+        Set all sliders value (amplitude) equal to master slider
+        """
         value=self.slider_master.get()
         self.slider_c1.set(value)
         self.slider_c2.set(value)
@@ -375,9 +419,13 @@ class App(customtkinter.CTk):
         self.slider_c6.set(value)
         self.slider_c7.set(value)
         self.slider_c8.set(value)
-        #masterAmp.set(value)
+
 
     def Kmeans(self):
+        """
+        Function to get tones from image using k-means
+        Sets new palette on GUI based on extracted tones
+        """
         # ask image to get tones from:
         filetypes = (("PNG Files", "*.png"), ("JPEG Files", "*.jpg;*.jpeg"))
         answer = filedialog.askopenfilename(parent=self, title="Select File", filetypes=filetypes)
@@ -392,6 +440,10 @@ class App(customtkinter.CTk):
             self.setPalette([R,G,B],mode="from kmeans")
 
     def selectFilter_callback(self, choice):
+        """
+        Function to display selected filter on GUI (Bottom frame)
+        :param choice: filter type
+        """
         print("Selected Filter:", choice)
         if choice=="Pixelate Triangles":
             #Set min and max sizes allowed for pixelation:
