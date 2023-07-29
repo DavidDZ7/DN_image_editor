@@ -65,13 +65,13 @@ def filter_triangle(filepath,size,flipX,flipY):
             # -------------------------------------------------------------------------------------
             flattened_kernel1 = kernel1.flatten()  # flatten the kernel
 
-            flattened_b1=image[y:y + size, x:x + size, 0].flatten() #retrieve red channel of region and flatten the array
+            flattened_b1=image[y:y + size, x:x + size, 0].flatten() #retrieve blue channel of region and flatten the array
             #print(flattened_b1)
             mean_b1=np.mean(flattened_b1[flattened_kernel1.astype(bool)])#use flattened kernel to retrieve and compute the mean of elements inside the triangle
             mean_b1=mean_b1.astype('uint8') #make sure to return as uint8 since the mean can give float values
             #print(mean_b1)
 
-            flattened_g1=image[y:y + size, x:x + size, 1].flatten() #retrieve red channel of region and flatten the array
+            flattened_g1=image[y:y + size, x:x + size, 1].flatten() #retrieve green channel of region and flatten the array
             #print(flattened_g1)
             mean_g1=np.mean(flattened_g1[flattened_kernel1.astype(bool)])#use flattened kernel to retrieve and compute the mean of elements inside the triangle
             mean_g1=mean_g1.astype('uint8') #make sure to return as uint8 since the mean can give float values
@@ -88,13 +88,13 @@ def filter_triangle(filepath,size,flipX,flipY):
             # -------------------------------------------------------------------------------------
             flattened_kernel2 = kernel2.flatten()  # flatten the kernel
 
-            flattened_b2 = image[y:y + size, x:x + size,0].flatten()  # retrieve red channel of region and flatten the array
+            flattened_b2 = image[y:y + size, x:x + size,0].flatten()  # retrieve blue channel of region and flatten the array
             # print(flattened_b2)
             mean_b2 = np.mean(flattened_b2[flattened_kernel2.astype(bool)])  # use flattened kernel to retrieve and compute the mean of elements inside the triangle
             mean_b2 = mean_b2.astype('uint8')  # make sure to return as uint8 since the mean can give float values
             #print(mean_b2)
 
-            flattened_g2 = image[y:y + size, x:x + size,1].flatten()  # retrieve red channel of region and flatten the array
+            flattened_g2 = image[y:y + size, x:x + size,1].flatten()  # retrieve green channel of region and flatten the array
             # print(flattened_g2)
             mean_g2 = np.mean(flattened_g2[flattened_kernel2.astype(bool)])  # use flattened kernel to retrieve and compute the mean of elements inside the triangle
             mean_g2 = mean_g2.astype('uint8')  # make sure to return as uint8 since the mean can give float values
@@ -121,16 +121,19 @@ def filter_triangle(filepath,size,flipX,flipY):
             kernel2 = np.flip(kernel2, axis=0)#to flip the kernel for next row
 
 
-    #cv2.imshow('Image', image)
-    #cv2.waitKey(0)  # Wait for a key press to close the window
-
-    # -------------------------------------------------------------------------------------
-    # Save output
-    # -------------------------------------------------------------------------------------
-    #filename = os.path.basename(filepath)# Get the base name of the file
-    #name_without_extension = os.path.splitext(filename)[0]# Split the file name and extension
-    #outfile=name_without_extension+"_output_step"+str(size)+".png"
-    #cv2.imwrite(outfile,image)
-
     print("Done")
     return image
+
+if __name__ == "__main__":
+    print("-" * 20)
+    print("Debug mode")
+    print("-" * 20)
+
+    filepath=r"my_image_filepath"
+    size=30
+    PixelatedImage=filter_triangle(filepath=filepath, size=size, flipX=True, flipY=True)
+    # Save output
+    filename = os.path.basename(filepath)# Get the base name of the file
+    name_without_extension = os.path.splitext(filename)[0]# Split the file name and extension
+    outfile=name_without_extension+"_output_size"+str(size)+".png"
+    cv2.imwrite(outfile,PixelatedImage)
