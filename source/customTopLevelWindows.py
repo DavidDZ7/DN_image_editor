@@ -2,6 +2,7 @@
 Custom Top Level Windows
 - askPalette (window to ask user for new palette name)
 - colorChooser
+- welcome window
 
 David Norman Diaz Estrada - 2023
 """
@@ -312,7 +313,7 @@ class welcomeWindow(customtkinter.CTkToplevel):
         webbrowser.open("https://www.linkedin.com/in/dnde7")
 
     def open_link_github(self):
-        webbrowser.open("https://github.com/DavidDZ7/DN_image_editor")
+        webbrowser.open("https://github.com/DavidDZ7/DNimageEditor")
 
     def on_closing(self):
         self.grab_release()
