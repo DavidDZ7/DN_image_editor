@@ -120,6 +120,11 @@ class App(customtkinter.CTk):
         self.author_label.pack()
         self.author_label.bind("<Button-1>", lambda event: open_link())# Configure the label to act as a hyperlink
 
+        #------------------------------------------------------------------------
+        #Welcome window
+        #------------------------------------------------------------------------
+        customTopLevelWindows.welcomeWindow()#create welcome window
+
     def load_image(self):
         """
         Function to load an input image and display it on GUI

@@ -5,14 +5,35 @@ Custom Top Level Windows
 
 David Norman Diaz Estrada - 2023
 """
+import os
+import webbrowser
+from PIL import Image
 import customtkinter
+
+
+#--------------------------------------------------
+# Set paths for logo and icon:
+#--------------------------------------------------
+if __name__ == "__main__":
+    # Get the directory path of this script:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Go one level up to reach the project_folder:
+    project_folder = os.path.dirname(script_dir)
+    # Construct the path to the assets folder:
+    assets_folder = os.path.join(project_folder, "assets")
+    # Set logo and icon paths:
+    icon_path = os.path.join(assets_folder, "DN.ico")
+    logo_path = os.path.join(assets_folder, "DN_LogoDark.png")
+else:
+    icon_path = r".\assets\DN.ico"
+    logo_path = r".\assets\DN_LogoDark.png"
 
 class askPalette(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("Save Palette")
         self.geometry("270x130+600+600")
-        self.icon_path = r".\assets\DN.ico"
+        self.icon_path = icon_path
         self.after(200, lambda: self.iconbitmap(self.icon_path))#delay needed due to bug in customTkinter when setting icon on TopLevel Window
         self.wm_attributes('-topmost', True)  # bring the window in front of the main app
         self.deiconify()  # show the window
@@ -75,7 +96,7 @@ class colorChooser(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
         self.title("Color")
         self.geometry("415x300+600+600")
-        self.icon_path = r".\assets\DN.ico"
+        self.icon_path = icon_path
         self.after(200, lambda: self.iconbitmap(self.icon_path))#delay needed due to bug in customTkinter when setting icon on TopLevel Window
         self.wm_attributes('-topmost', True)  # bring the window in front of the main app
         self.deiconify()  # show the window
@@ -250,11 +271,62 @@ class colorChooser(customtkinter.CTkToplevel):
             return [RGB,hexa]
         else: return None
 
+
+class welcomeWindow(customtkinter.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.version="v1.0.0"#app version
+        self.title("Welcome!")
+        self.geometry("530x250+350+400")
+        self.icon_path=icon_path
+        self.logo_path=logo_path
+
+        self.after(200, lambda: self.iconbitmap(self.icon_path))#delay needed due to bug in customTkinter when setting icon on TopLevel Window
+        self.wm_attributes('-topmost', True)  # bring the window in front of the main app
+        self.deiconify()  # show the window
+
+        pil_img = Image.open(self.logo_path)
+        self.img = customtkinter.CTkImage(dark_image=pil_img, size=(int(pil_img.size[0]/3), int(pil_img.size[1]/3)))
+        self.img_label = customtkinter.CTkLabel(self, image=self.img, text="")
+        self.img_label.grid(row=0, column=0, columnspan=2,padx=10, pady=[10,20], sticky="EW")
+
+
+        self.text_frame = customtkinter.CTkFrame(master=self,fg_color="transparent")
+        self.text_frame.grid(row=1, column=0, columnspan=2, padx=0, pady=0, sticky="NEW")
+        text="2023 - Made by DAVID NORMAN DIAZ ESTRADA\n"+"DN Image Editor | "+self.version
+        self.appInfo_label = customtkinter.CTkLabel(self.text_frame, text=text,justify="center",font=("Roboto",15),cursor="hand2")
+        self.appInfo_label.pack()
+        self.appInfo_label.bind("<Button-1>", lambda event: self.open_link_linkedin())# Configure the label to act as a hyperlink
+
+        self.github_button = customtkinter.CTkButton(master=self, text="GitHub", font=("Roboto", 15,"bold"),
+                                                    cursor="hand2",fg_color="#333333",hover_color="#00cd00",
+                                                    corner_radius=5,width=70,command=self.open_link_github)
+        self.github_button.grid(row=2, column=0, padx=2, pady=2,sticky="e")
+
+        self.linkedin_button = customtkinter.CTkButton(master=self, text="LinkedIn", font=("Roboto", 15,"bold"),
+                                                    cursor="hand2",fg_color="#333333",hover_color="#00cd00",
+                                                    corner_radius=5,width=70,command=self.open_link_linkedin)
+        self.linkedin_button.grid(row=2, column=1, padx=2, pady=2,sticky="w")
+
+    def open_link_linkedin(self):
+        webbrowser.open("https://www.linkedin.com/in/dnde7")
+
+    def open_link_github(self):
+        webbrowser.open("https://github.com/DavidDZ7/DN_image_editor")
+
+    def on_closing(self):
+        self.grab_release()
+        self.destroy()
+
+
+#--------------------------------------------------
+# Debug mode:
+#--------------------------------------------------
 if __name__ == "__main__":
     print("-" * 20)
     print("Debug mode")
     print("-" * 20)
 
-    app = colorChooser()
+    app = welcomeWindow()
     app.mainloop()
 
