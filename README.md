@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/DN_LogoDark.png">
-    <img src="./assets/DN_LogoLight.png">
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/DN_LogoDark.png" width="600">
+    <img src="./assets/DN_LogoLight.png" width="600">
   </picture>
 </p>
 
@@ -54,7 +54,7 @@ DN Image Editor requires the following dependencies: OpenCV, Scikit-learn, NumPy
 
 First, clone this repo, you can do:
 ```
-git clone https://github.com/DavidDZ7/DN_image_editor.git
+git clone https://github.com/DavidDZ7/DNimageEditor.git
 ```
 Then, go to Anaconda prompt and navigate to the folder repo and proceed as follows:
 ```
