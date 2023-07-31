@@ -48,6 +48,15 @@ Here are some examples of different pixelation levels:
 <img src="readmeFiles/triangleFilterExamples.png" >
 
 ------------------
+**Demo Video:**<br/>
+------------------
+See the demo video: https://youtu.be/Vg87ZTrkO_c
+
+[![Watch the video](https://img.youtube.com/vi/Vg87ZTrkO_c/hqdefault.jpg)](https://www.youtube.com/embed/Vg87ZTrkO_c)
+
+
+
+------------------
 **Installation:**<br/>
 ------------------
 DN Image Editor requires the following dependencies: OpenCV, Scikit-learn, NumPy, Matplotlib, Tkinter, CustomTkinter, and Pillow.
